@@ -61,7 +61,7 @@
 Labels에 대하여 연속형 독립변수들로 회귀분석을 실시한 결과:
 - 결정계수(R-sqaured)는 전체 데이터 중 해당 회귀모델이 설명 할 수 있는 데이터의 비율, 회귀식의 설명력을 나타내는데(1에 가까울수록 높은 설명력), 여기선 0.218로 모형적합도는 낮은 편이다.
 - F-statistic은 32.02, p-value(Prob(F-statistics))는 1.46e-112로 0.05 이하이니 통계적으로 유의하며, 변수끼리 관련있다고 판단된다.
-- 회귀계수(coef)는 상대적으로 HbA1c가 0.159로 가장 높다.
+- 회귀계수(coef)는 HbA1c가 0.159로 가장 높다. HbA1c의 1 증가가 labels에 가장 큰 영향을 준다고 볼 수 있겠다.
 - t-test결과, 독립변수와 종속변수 사이의 상관관계를 의미하는 t 값(값이 클수록 상관도가 큼)이 상대적으로 큰 변수들로는 age, HbA1c, FBG, TC, GGT, ALP이다.
 - 독립변수들간의 유의확률(P>|t|; p-value)을 보면, 이 age, HbA1c, FBG, TC, GGT, ALP 변수들이 통계적으로 유의한 것으로 나타났다(0.05보다 작아야 유의미).
 
@@ -139,7 +139,6 @@ VIF 값이 가장 큰 변수들 중 Ht, Wt를 먼저 제외하고, 이후 DBP, T
 각 검사항목별로 정상 또는 판단 기준 범위에 따라 나누고 그룹화한/범주화한 파생 변수를 생성하였다. 추가적으로, 맥압, BUN/Cr 비율, AST/ALT 비율 등 당뇨병 진단과 밀접하게 관련된 다른 검사에 대해서도 조사하여 산식을 적용하여 범주화 된 변수를 생성하였고, DLP(이상지질혈증), MS(대사증후군) 등 당뇨로 발생 할 수 있는 질병과 합병증에 대한 정보도 확인하여 관련 산식을 적용하여 생성하였다.
 
 ---
-
 ## 모델링
 
 ### 모델링 과정
@@ -173,7 +172,7 @@ VIF 값이 가장 큰 변수들 중 Ht, Wt를 먼저 제외하고, 이후 DBP, T
 
 마지막으로, 당뇨병에 대한 조사를 하면서, 각 검사 수치에 대한 판단 기준이 자료마다, 병원마다 달랐고, 따라서 조사한 것과 자료들을 기반으로 판단하여 범주화한 것이 예측 성능에 영향을 줄 수도 있을 것 같아 기존의 연속형 변수들만을 사용하여 스케일링 적용 후 모델링하는 것도 시도하였다.
 
-그리고 성능 테스트 과정에서 의미가 있을 것으로 판단되는 경우 범주화된 데이터셋에 일부 스케일링된 변수를 추가하거나, 반대로 스케일링된 데이터셋에 범주형 변수를 합쳐서도 시도하였다.
+그리고 성능 테스트 과정에서 의미가 있을 것으로 판단되는 경우 범주화된 데이터셋에 일부 스케일링된 변수를 추가하거나, 반대로 스케일링된 데이터셋에 범주형 변수를 합쳐서도 시도하였으며, 불필요하다고 여겨지거나 상관관계가 높은 변수들을 빼보기도 하였다.
 
 #### 2. 오버샘플링
 
@@ -189,16 +188,137 @@ VIF 값이 가장 큰 변수들 중 Ht, Wt를 먼저 제외하고, 이후 DBP, T
 
 #### 3. 하이퍼파라미터 튜닝
 
-각 전처리 및 오버샘플링 과정별로 하이퍼 파라미터 튜닝을 진행하였는데,
-DecisionTree와 KNN을 베이스 모델로 삼고 다른 여러 모델들을 시도해 보면서 성능을 비교하며 파라미터 옵션을 추가하거나 값을 변경해 갔습니다.
-암 진단과 같이 당뇨병 진단도 실제 양성을 양성으로 예측하는 것이 중요하다고 판단하여,
-Accuracy와 함께 recall(재현율) 예측율을 높이는 것에 중점을 두어 파라미터 튜닝을 진행하였습니다.
+![image](https://user-images.githubusercontent.com/38115693/147499588-35f33d6b-5fb9-4902-93bf-a9c3bdb873e1.png)
+
+각 전처리 및 오버샘플링 과정별로 하이퍼파라미터 튜닝을 진행하였는데, DecisionTree와 KNN을 베이스 모델로 시작하여, 다른 여러 모델들을 시도해 보면서 성능을 비교하며 파라미터 옵션을 추가하거나 값을 변경해 갔다.
+
+암 진단과 같이 당뇨병 진단도 실제 양성을 양성으로 예측하는 것이 중요하다고 판단하여, accuracy(정확도)와 함께 recall(재현율) 예측률을 높이는 것에 중점을 두어 파라미터 튜닝을 진행하였다.
+
+![image](https://user-images.githubusercontent.com/38115693/147500056-cbd7a551-021a-4775-8f66-d14874de4910.png)
+
+이후, 각 과정별 성능이 좋은 모델을 선별하여 교차검증과 GridSearchCV를 사용하여 최적의 파라미터를 찾아보았다. 성능을 테스트해 가며 파라미터 옵션이나 값을 추가하거나 변경해 갔다. 
+
+하지만 기대했던 좋은 결과를 얻지 못 하여, 주요 모델에 대해 GridSearchCV에 구체적인 평가(evaluatoin) 메트릭스를 단일 지정하여서 시도해 보고, 다중으로 지정하여서도 파라미터 튜닝을 시도해 보았다.
+
+![image](https://user-images.githubusercontent.com/38115693/147500254-bc1d381d-6bd5-4cb6-865d-cc6e9479a1ff.png)
+
+그럼에도 기대했던 좋은 결과를 얻지는 못하였다. Accuracy에 대해선 높은 결과를 얻을 수 있었지만, accuracy와 recall 모두 좋은 성능을 보이는 모델을 찾기는 쉽지 않았다. 직접 튜닝을 했을 때의 결과가 더 이상적이었기 때문에, 결국 직접 튜닝해 가며 여러 시나리오별로 학습과 테스트를 진행하였다. 그리고 여러 evaluation metrics로 평가해 mean값을 정리해 주고자 cross_val_score 모듈을 사용하지 않고, Stratified K-Fold와 반복문을 사용해 index를 반환받아 교차 학습 및 평가를 진행하였으며, 각 모델별로 평가 지표(accuracy, precision, recall, f-1, roc-auc)의 평균 값으로 모델 성능을 평가하였다. 이와 같이 진행하며, accuracy와 recall에 대한 성능을 높여나갔다.
+
+![image](https://user-images.githubusercontent.com/38115693/147502491-7d5359ca-5468-4df2-b4df-99d05f03380a.png)
 
 
+---
+## 모델링 결과
 
-References
-https://www.amc.seoul.kr/asan/healthinfo/disease/diseaseDetail.do?contentId=31596
-https://www.kosso.or.kr/newsletter/202104/sub02.html
-https://www.hidoc.co.kr/healthstory/news/C0000633143
-https://www.joongang.co.kr/article/24109084#home
-https://kdca.go.kr/board/board.es?mid=a40303030000&bid=0034&act=view&list_no=716754
+### 각 수치를 구간별로 나눠 범주화 한 데이터 기준 모델링
+범주화 한 데이터에 One-Hot Encoding을 적용하고, 별도로 범주화하지 않은 연속형으로 남아있는 Wt, Ht 피처들을 포함하여 모델링을 시도하였고, 오버샘플링으로 범주형+연소형 데이터에 적합한 SMOTE-NC와 RandomOversampling를 적용한 결과, 이 중 ROS을 적용했을 때의 모델의 예측 성능이 가장 좋았다.
+
+하지만 이어서, 연속형인 Wt, Ht를 제외하고 범주화 한 피처들만을 사용하여 다시 시도해 보았고, 결과적으로 더 좋은 성능를 얻을 수 있었다.
+
+![image](https://user-images.githubusercontent.com/38115693/147502365-93d6dfdc-13af-4d72-bcc2-f4812c19e3ea.png)
+
+테스트 결과, Random Forest의 성능은 평균적으로 accuracy가 82%, recall이 75%, Logistic Regression은 accuracy가 평균 79%, recall 74%, SVM은 accuracy 77%, recall 74%의 예측 성능을 보여주었다.
+
+### 기존 연속형 데이터 기준 모델링
+1. 기존 연속형 데이터 기준으로 Standard Scaling을 적용하여 모델링을 시도하였다. 우선 gender, age 피처에 대해 One-Hot Encoding을 적용하고, 'Data Leakage'를 피하기 위해 train-test split을 먼저 한 후 기존 연속형 변수들에 대해 Standard Scaling을 적용하였다. 마지막으로, oversampling(SMOTENC, RandomOversampling) 기법을 적용하고 모델 학습과 테스트를 진행하였다.
+
+![image](https://user-images.githubusercontent.com/38115693/147503805-fc4534c4-4bc3-454a-b1fb-79cc92202e5b.png)
+
+SMOTE-NC를 적용했을 때에, 평균적으로 Logistic Regression은 accuracy가 83%, recall이 79%를 얻었으며, SVM은 각각 81%, 79%의 예측 성능을 보여주었다. Random Oversampling을 적용했을 때엔, 평균적으로 Logistic Regression이 accuracy가 83%, recall이 80%를 얻었으며, SVM은 각각 82%, 81%의 성능을 보여주었다.
+
+Standard Scaling을 적용한 두 모델 모두 성능은 비슷하게 나타났으며, 두 결과 모두 구간으로 나누어 범주화한 데이터셋을 사용하여 모델링한 결과보다 성능이 더 좋게 나타났다.
+
+**상관관계가 높은 변수 처리 후 재시도**
+
+이어서 상관관계가 높은 변수를 처리한 후 다시 동일하게 학습과 테스트를 진행하였다.
+- Wt(몸무게), Ht(키)간의 그리고 BMI(체질량지수)와 Ht간의 양적 상관관계가 높고, BMI에 이미 Wt, Ht가 사용되어 계산된 것이기 때문에 Wt, Ht 피처는 제외하였다.
+- DBP(이완기혈압), SBP(수축기혈압)도 높은 양의 상관관계를 보이나, DBP와 SBP의 차이('맥압') 또한 의미가 있을 수 있다 생각되어 제외하지 않기로 하였다.
+- TC(총 콜레스테롤)를 계산하자면 HDL+LDL+(TG/5)이며, LDL이 TC 계산에 포함되고 양적 상관관계 또한 높아 학습시 해당 변수를 제외할까 고민했지만, 이 계산식은 어디까지나 간이 계산법이며, 검사를 한 것이 보다 정확한 수치라고 한다 (콜레스테롤의 경우 오차범위가 큰 편이다). 따라서, TC, HDL(고밀도콜레스테롤), LDL(저밀도콜레스테롤), TG(중성지방) 각각의 수치가 가지는 의미나 영향이 있을 수 있다 생각되어, 제외하기 않고 사용하기로 하였다.
+- ALT(알라닌아미노전이효소), AST(아스파르테이트아미노전달효소) 두 피처도 높은 양의 상관관계를 보이는데, AST/ALT 비율이 간 기능의 데미지를 파악하는 지표로도 사용되기에 제외하지 않고 사용하겠다.
+- CrCl(크레아티닌청소율)과 Cr(크레아티닌)은 비교적 강한 음의 상관관계를 보인다. Cr은 낮을수록, CrCl은 높을수록 좋은 것인데, Cr이 증가하면 CrCl은 감소한다. Cr과 CrCL 수치엔 연령, 체중, 성별 등의 변수도 영향을 주기에 두 피처 모두 그대로 포함하여 진행하겠다.
+
+![image](https://user-images.githubusercontent.com/38115693/147504188-68227819-e075-4056-989c-174eb6976814.png)
+
+SMOTE-NC를 적용했을 때에, 평균적으로 Logistic Regression은 accuracy가 84%, recall이 77%를 얻었으며, SVM은 각각 82%, 77%의 예측 성능을 보여주었다. Random Oversampling을 적용했을 때엔, 평균적으로 Logistic Regression이 accuracy가 83%, recall이 80%를 얻었으며, SVM은 각각 82%, 82%의 성능을 보여주었다.
+
+Wt, Ht 피처들을 제외한 두 모델도 구간으로 나누어 범주화한 데이터셋을 사용하여 모델링한 결과보다는 예측 성능이 더 좋은 것으로 보여진다. Wt, Ht를 포함하여 모델링 했을 때의 결과와 비교하면, accuracy 결과는 비슷하지만, recall은 Wt, Ht를 포함했을 때의 결과가 더 좋기 때문에, 더 좋은 모델로 판단된다.
+
+2. 다음으로, gender 피처에 대해서만 One-Hot Encoding을 적용하고, 이번엔 age 피처를 Standard Scaling 과정에 포함하여 진행하였다. 위와 동일한 과정을 거쳐 학습과 테스트를 진행하였으며, Wt, Ht를 포함하였을 때의 결과는 아래와 같다.
+
+![image](https://user-images.githubusercontent.com/38115693/147504845-ca463740-bcfd-4eb4-9f09-9d6a08092a8b.png)
+
+age 피처를 scaling에 포함한 모델에 SMOTE-NC를 적용했을 때에, 평균적으로 Logistic Regression은 accuracy가 85%, recall이 82%를 얻었으며, SVM은 각각 84%, 82%의 예측 성능을 보여주었다. Random Oversampling을 적용했을 때엔, 평균적으로 Logistic Regression이 accuracy가 84%, recall이 83%를 얻었으며, SVM은 각각 83%, 82%의 성능을 보여주었다.
+
+이는 앞서 Wt, Ht 피처들을 포함하여 모델링 했을 때의 결과보다도 더 좋은 예측 성능을 보여준다.
+
+### 변수 중요도 확인
+
+**RandomForest의 Feature Importances**
+
+![image](https://user-images.githubusercontent.com/38115693/147505056-2387a2e8-3405-4b62-baf3-ca0748616b6d.png)
+
+RandomForest의 Feature Importances로 변수 중요도 확인 결과, FBG, HbA1c, GGT, ALP, BMI, Wt 등이 높은 중요도를 가진다.
+
+하지만 이 Scikit-learn의 디폴트 랜덤 포레스트 Feature Importances는 다소 biased한 것으로 알려져 있다. 특히, 랜덤 포레스트는 연속형 변수 또는 카테고리 개수가 매우 많은 변수, 즉 ‘high cardinality’ 변수들의 중요도를 더욱 부풀릴 가능성이 높다고 한다. Cardinality가 큰 변수일 수록, 노드를 쪼갤게 훨씬 더 많아서 노드 중요도 값이 높게 나오는 것으로 추측된다. 또한, 이 불순도를 기반으로 한 변수 중요도는 train 과정에서 얻은 중요도이기 때문에, test 데이터셋에서는 이 변수 중요도가 어떻게 변하는지 알 수 없다. 실제 test 데이터셋에서는 중요하지 않은 변수가 train 과정에서는 중요한 변수로 계산 될 수 있다. 따라서, 랜덤 포레스트의 Feature Importances 외에 Permutation Feature Importance와 같은 다른 방법을 혼합해서 사용하는 것이 좋다.
+
+**Permutation Importance**
+
+Permutation Importance는 모델 예측에 가장 큰 영향을 미치는 feature를 파악하는 방법으로 어떤 모델이든 적용할 수 있는 것으로 알려져 있다. 특히, Permutation Importance는 모델 훈련이 끝난 뒤에 계산되며, 훈련된 모델이 특정 feature를 안 썼을 때 이것이 성능 손실에 얼마만큼의 영향을 주는지를 통해 그 feature의 중요도를 파악한다.
+
+![image](https://user-images.githubusercontent.com/38115693/147505301-bdd4fd36-1e3f-4523-8b52-c6fcfbdec4de.png)
+
+Permutation Importance로 변수 중요도 확인 결과, FBG, HbA1c, BMI, age, Wt, gender_F, ALP, GGT 등의 순서로 변수 중요도가 높다. 이 중, FBG, HbA1c, age, GGT, ALP 피처들은 모두 회귀분석 결과 통계적으로 유의했던 변수들이다.
+
+---
+
+## 한계 및 과제
+
+![image](https://user-images.githubusercontent.com/38115693/147505395-b6e6d8e0-55d1-4983-b8eb-0cfb173ddd64.png)
+
+1. 첫번째로는, 모델을 충분히 학습시키기에 데이터가 조금 부족했다고 생각 되었다.
+2. 둘째, 데이터에 대한, 각 변수들에 대한 정보가 없어 직접 검색해 보고 확인해 가며 공부하였지만, 결국 활용하지 못한 컬럼도 있었다는 것이 아쉬움으로 남는다.
+3. 셋째는 도메인 지식이다. 당뇨병에 대한 생물학적인/의료적인 지식이 부족했다는 점인데, 만약 더 깊은 도메인 지식이 있었다면, 더 심도 깊은 분석과 모델링을 시도해 볼 수 있지 않았을까 생각이 들었다.
+4. 마지막으로, 온라인 자료, 연구/학술자료, 또 분야 별로 검사하고 진단하는 수치들에 대한 판단 기준이 달랐다. 이에 따라, 변수를에 대한 기준 값을 잡아 그룹화를 하는 것에 어려움이 있었다.
+
+![image](https://user-images.githubusercontent.com/38115693/147505585-0cc82c61-471a-4619-9ad5-6fa45dd10040.png)
+
+1. 향후엔, 성별과 연령대에 따른 더 세분화 된 분류 기준을 활용하고 적용하여 학습과 모델링을 해 보겠다. 더 세분화 한다면 더 성능 좋은 모델이 만들어질 것으로 기대한다.
+2. 그리고 불균형 데이터이며 범주형 피처와 연속형 피처가 섞여 있는 데이터를 처리하는 더욱 효과적이고 적합한 기법들에 대한 연구, 적용 및 시도를 해보고 싶다.
+
+---
+
+## 관련 자료
+
+- https://www.amc.seoul.kr/asan/healthinfo/disease/diseaseDetail.do?contentId=31596
+- https://www.kosso.or.kr/newsletter/202104/sub02.html
+- https://www.hidoc.co.kr/healthstory/news/C0000633143
+- https://www.joongang.co.kr/article/24109084#home
+- https://kdca.go.kr/board/board.es?mid=a40303030000&bid=0034&act=view&list_no=716754
+- https://www.e-jkd.org/upload/pdf/jkd-2020-21-1-27.pdf
+- http://www.lecturernews.com
+- https://www.koreascience.or.kr/article/JAKO200560537773551.pdf
+- http://www.monews.co.kr/news/articleView.html?idxno=203842
+- http://www.docdocdoc.co.kr
+- https://ko.wikipedia.org/wiki/%EB%8B%B9%EB%87%A8%EB%B3%91
+- https://smtmap.com/%EA%B0%84%EC%88%98%EC%B9%98/
+- http://guro.kumc.or.kr/dept/main/index.do?DP_CODE=GRCP&MENU_ID=003036050045
+- https://www.koreascience.or.kr/article/JAKO201354840931827.pdf
+- https://www.schlab.org/guide/item/261/
+- https://m.khan.co.kr/life/health/article/201511101537195#c2b
+- http://seoulnim.com/news/lecture_v.asp?srno=7628&page=70&gubun=&keyword=
+- https://blog.naver.com/PostView.naver?blogId=i-doctor&logNo=221450543662
+- https://www.joongang.co.kr/article/21657194#home
+- https://www.ibric.org/myboard/view.php?Board=review0&id=529&filename=bc0602.pdf&fidx=2&mode=down
+- https://blog.naver.com/hyouncho2/60170417299
+- https://www.paik.ac.kr/busan/medicine/disease_info_view.asp?p_sid=1040&p_cate=A
+- https://www.cheric.org/PDF/PIC/PC19/PC19-2-0085.pdf
+- https://labtestsonline.kr/tests
+- https://m.amc.seoul.kr/asan/mobile/healthinfo/
+- https://amc.seoul.kr/asan/healthinfo/
+- https://kormedi.com/
+- http://drug.co.kr/abbreviation/
+- https://m.blog.naver.com/sorak123/222052778113
+- http://guro.kumc.or.kr/
+- https://medgongbu.tistory.com/92
+- https://wyatt37.tistory.com/10
+- http://www.koreanhypertension.org/
