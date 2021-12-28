@@ -284,7 +284,7 @@ RandomForest의 Feature Importances로 변수 중요도 확인 결과, FBG, HbA1
 
 **Permutation Importance**
 
-Permutation Importance는 모델 예측에 가장 큰 영향을 미치는 피처를 파악하는 방법이다. 특히, Permutation Importance는 모델 훈련이 끝난 뒤에 계산 되기에 모델을 재학습 시킬 필요가 없으며, 어떤 모델이든 적용할 수 있는 것으로 알려져 있다. Permutation Importance는 훈련된 모델이 특정 피처를 사용하지 않았을 때 이것이 성능 손실에 얼마만큼의 영향을 주는지를 통해 그 피처의 중요도를 파악한다.
+Permutation Importance는 모델 예측에 가장 큰 영향을 미치는 피처를 파악하는 방법으로 훈련된 모델이 특정 피처를 사용하지 않았을 때 이것이 성능 손실에 얼마만큼의 영향을 주는지를 통해 그 피처의 중요도를 파악한다. 특히, Permutation Importance는 모델 훈련이 끝난 뒤에 계산 되기에 모델을 재학습 시킬 필요가 없으며, 어떤 모델이든 적용할 수 있는 것으로 알려져 있다.
 
 <p align="center"><img src="https://user-images.githubusercontent.com/38115693/147505301-bdd4fd36-1e3f-4523-8b52-c6fcfbdec4de.png" width="50%" height=""></p>
 
