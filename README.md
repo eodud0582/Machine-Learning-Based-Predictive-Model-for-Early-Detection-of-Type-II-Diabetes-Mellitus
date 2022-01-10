@@ -66,28 +66,24 @@
 비교적 강한 음의 상관관계(0.5<=r<0.7)를 보이는 변수들은 아래와 같다.
 - CrCl-Cr
 
-### 다중회귀분석
+### 로지스틱 회귀분석
 
-<p align="center"><img src="https://user-images.githubusercontent.com/38115693/147489857-6b0dd59b-7ac9-4e9e-ac5a-1604185787c8.png" width="30%" height=""></p>
+<p align="center"><img src="https://user-images.githubusercontent.com/38115693/148719024-157c2b26-9378-4422-bd92-23ab280bc64f.png" width="55%" height=""></p>
 
-Labels에 대하여 연속형 독립변수들로 회귀분석을 실시한 결과:
-- 결정계수(R-sqaured)는 전체 데이터 중 해당 회귀모델이 설명 할 수 있는 데이터의 비율, 회귀식의 설명력을 나타내는데(1에 가까울수록 높은 설명력), 여기선 0.218로 모형적합도는 낮은 편이다.
-- F-statistic은 32.02, p-value(Prob(F-statistics))는 1.46e-112로 0.05 이하이니 통계적으로 유의하며, 변수끼리 관련있다고 판단된다.
-- 회귀계수(coef)는 HbA1c가 0.159로 가장 높다. HbA1c의 1 증가가 labels에 가장 큰 영향을 준다고 볼 수 있겠다.
-- t-test결과, 독립변수와 종속변수 사이의 상관관계를 의미하는 t 값(값이 클수록 상관도가 큼)이 상대적으로 큰 변수들로는 age, HbA1c, FBG, TC, GGT, ALP이다.
-- 독립변수들간의 유의확률(P>|t|; p-value)을 보면, 이 age, HbA1c, FBG, TC, GGT, ALP 변수들이 통계적으로 유의한 것으로 나타났다(0.05보다 작아야 유의미).
+labels에 대하여 연속형 독립변수들로 로지스틱 회귀분석을 실시한 결과:
+- 결정계수(R-sqaured)는 전체 데이터 중 해당 회귀모델이 설명 할 수 있는 데이터의 비율, 회귀식의 설명력을 나타내는데(1에 가까울수록 높은 설명력), 여기선 0.3707로 모형적합도는 낮은 편이다. 하지만 로지스틱 회귀분석에서는 보통 R제곱값은 낮게 나오기 때문에, R제곱에 의존할 필요는 없다고 본다.
+- 회귀계수(coef)의 절대값으로 미루어보면 HbA1c가 2.7707으로 가장 높다. 오즈비 출력 결과, HbA1C가 15.9698로 역시 가장 큰 값으로 나타나며, 당뇨병 발병에 가장 큰 영향을 주는 것임을 알 수 있다. 즉, HbA1c가 1 증가할 때마다 당뇨병 진단 확률이 15.9698배 증가한다는 것이다.
+- z-statistic 결과, 독립변수와 종속변수 사이의 상관관계를 의미하는 z 값(값이 클수록 상관도가 큼)이 상대적으로 큰 변수들로는 age, HbA1c, FBG, TC, ALP 등으로 나타나는데, 독립변수의 유의확률(P>|z|)을 보면, 이 중 age, HbA1c, FBG, TC, ALP 변수들이 통계적으로 유의한 것으로 나타난다(0.05보다 작으면 유의미).
 
 ### VIF(Variance Inflation Factor)
 
 VIF란 독립변수를 다른 독립변수로 선형회귀한 성능을 나타내며, 다른 독립변수에 의존하는 가장 의존적인 변수를 찾을 수 있다 (다른 변수에 의존적일 수록 VIF가 커진다).
 
-<p align="center"><img src="https://user-images.githubusercontent.com/38115693/147490333-786c338e-588e-414b-9a85-7d830ac5ccf2.png" width="13%" height=""></p>
+<p align="center"><img src="https://user-images.githubusercontent.com/38115693/148717942-abe8e428-9672-43ea-bfd1-8001a1bcfa21.png" width="15%" height=""></p>
 
-Ht, Wt, BMI, SBP, DBP, HbA1c, FBG, TC, LDL, Alb 등이 높은 VIF 값을 보인다. 다른 독립변수들에 의존적인 변수들임을 의미한다.
+- 각 변수별로 VIF가 10 이상인 경우에 다중공선성이 있다고 판단할 수 있다. 4개 변수를 제외한 대부분의 변수들이 10 이상의 VIF 값으로 나타나는데, 이 중, Ht, TC, Alb, BMI, Wt, HbA1c 등이 특별히 높은 VIF 값을 가진다. 다른 독립변수들에 의존적인 변수들임을 의미한다.
 
-VIF 값이 가장 큰 변수들 중 Ht, Wt를 먼저 제외하고, 이후 DBP, TC, Alb 변수들도 순차적으로 제외 한 후 VIF를 다시 계산해 보았다. 조회한 VIF 값은 이후 예측 모델링시 전처리 과정에서 참고 하였다.
-
-<p align="center"><img src="https://user-images.githubusercontent.com/38115693/147490591-12a05a97-8f76-419f-b301-caba2b59e69e.png" width="10%" height="400"> <img src="https://user-images.githubusercontent.com/38115693/147490637-b1af2608-1320-4115-88bb-d105a97c35a9.png" width="10%" height="400"></p>
+이에 따라, VIF 값이 가장 큰 변수들 중 Ht, Wt를 제외하고 VIF 값의 변화량을 보았고, 또 TC와 Alb도 순차적으로 제외해 가며 VIF를 다시 계산하였다. 이후 모델링 과정에서 추가적인 전처리를 시도할 때, 확인한 VIF를 참고하였다.
 
 ### 당뇨병 진단 데이터 특성 조회
 
@@ -137,7 +133,7 @@ VIF 값이 가장 큰 변수들 중 Ht, Wt를 먼저 제외하고, 이후 DBP, T
 
 ### 결측치 처리
 
-<p align="center"><img src="https://user-images.githubusercontent.com/38115693/147493976-370db9bb-482e-4367-a416-b4b531f6383e.png" width="40%" height=""></p>
+<p align="center"><img src="https://user-images.githubusercontent.com/38115693/147493976-370db9bb-482e-4367-a416-b4b531f6383e.png" width="30%" height=""></p>
 
 결측치 조회 결과 PR, TG, LDL, HDL, Alb, ALP 피처에서 결측치가 확인 되었으며, 아래와 같이 처리하였다.
 - PR의 경우 age 피처를 연령대별로 나누어 범주화한 피처를 사용하여, 동일한 연령대 PR의 평균값으로 대체하였다. 
