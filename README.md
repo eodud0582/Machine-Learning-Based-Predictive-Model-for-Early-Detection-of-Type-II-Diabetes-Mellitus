@@ -1,3 +1,5 @@
+![image](https://user-images.githubusercontent.com/38115693/155300410-ab11b2cb-3610-4340-a69f-d0d75a3a8aaa.png)
+
 # 머신러닝 기반 당뇨병 발병 사전 예측 모델
 ### 실제 임상데이터(Real World Data)를 활용한 당뇨병 발병 사전 예측 모델 개발
 
