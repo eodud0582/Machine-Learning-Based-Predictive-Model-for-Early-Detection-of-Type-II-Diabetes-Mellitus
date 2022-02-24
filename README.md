@@ -72,11 +72,11 @@
 
 ### 로지스틱 회귀분석
 
-<p align="center"><img src="https://user-images.githubusercontent.com/38115693/148719024-157c2b26-9378-4422-bd92-23ab280bc64f.png" width="55%" height=""></p>
+<p align="center"><img src="https://user-images.githubusercontent.com/38115693/155496577-604c0619-3450-4e2d-b9ff-01291e143a1a.png" width="55%" height=""></p>
 
-- labels에 대하여 연속형 독립변수들로 **로지스틱 회귀분석** 수행
-  - **회귀계수(coef)의 오즈비** 출력 결과, `HbA1C`가 15.9698로 가장 큰 값으로 나타나며, 당뇨병 진단에 가장 큰 영향을 주는 요인이라고 볼 수 있다. 이는, HbA1c가 1 증가할 때마다 당뇨병 진단 확률이 15.9698배 증가한다는 것을 의미한다.
-  - 독립변수의 **유의확률**(P>|z|)을 보면, `age, HbA1c, FBG, TC, ALP` 변수들이 통계적으로 유의한 것으로 나타난다.
+- Labels에 대하여 연속형 독립변수들로 **로지스틱 회귀분석** 수행
+  - **회귀계수**(coef)의 절대값으로 미루어보면 `HbA1c`가 2.7707으로 가장 높고, 오즈비(odds ratio) 출력 결과도 역시 `HbA1C`가 15.9698로 가장 큰 값으로 나타났다. 당뇨병 진단에 가장 큰 영향을 주는 요인이라고 볼 수 있다. 이는, HbA1c가 1 증가할 때마다 당뇨병 진단 확률이 15.9698배 증가한다는 것을 의미한다.
+  - 독립변수와 종속변수 사이의 상관관계를 의미하는 z 값이 상대적으로 큰 변수들로는 `age, HbA1c, FBG, TC, ALP` 등으로 나타나며, 독립변수의 **유의확률**(P>|z|)을 보면, `age, HbA1c, FBG, TC, ALP` 변수들이 통계적으로 유의한 것으로 나타난다.
 
 ### VIF(Variance Inflation Factor)
 
@@ -223,9 +223,9 @@
 
 **모델링 결과**
 
-<p align="center"><img src="https://user-images.githubusercontent.com/38115693/147502365-93d6dfdc-13af-4d72-bcc2-f4812c19e3ea.png" width="40%" height=""></p>
+<p align="center"><img src="https://user-images.githubusercontent.com/38115693/155497060-eb91f705-b2e1-49db-92aa-9c62ade394e0.png" width="40%" height=""></p>
 
-- 이 실험에선 Random Oversampling을 적용했을 때의 모델 예측 성능이 가장 좋았는데, 연속형 피처인 Wt, Ht는 제외하고, 범주화 된 피처들만을 사용했을 때에 결과적으로 가장 괜찮은 성능을 보였다.
+- 이 실험에선 **Random Oversampling**을 적용했을 때의 모델 예측 성능이 가장 좋았는데, **연속형 피처인 Wt, Ht는 제외하고, 범주화 된 피처들만을 사용했을 때**에 결과적으로 가장 괜찮은 성능을 보였다.
 
 ```
 - Random Oversampling 적용 모델의 평균 예측 성능
