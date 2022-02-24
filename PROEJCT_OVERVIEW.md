@@ -71,7 +71,7 @@
 
 ### 로지스틱 회귀분석
 
-<p align="center"><img src="https://user-images.githubusercontent.com/38115693/148719024-157c2b26-9378-4422-bd92-23ab280bc64f.png" width="55%" height=""></p>
+<p align="center"><img src="https://user-images.githubusercontent.com/38115693/155496577-604c0619-3450-4e2d-b9ff-01291e143a1a.png" width="55%" height=""></p>
 
 labels에 대하여 연속형 독립변수들로 로지스틱 회귀분석을 실시한 결과:
 - 결정계수(R-sqaured)는 전체 데이터 중 해당 회귀모델이 설명 할 수 있는 데이터의 비율, 회귀식의 설명력을 나타내는데(1에 가까울수록 높은 설명력), 여기선 0.3707로 모형적합도는 낮은 편이다. 하지만 로지스틱 회귀분석에서는 보통 R제곱값은 낮게 나오기 때문에, R제곱에 의존할 필요는 없다고 본다.
@@ -232,9 +232,9 @@ VIF란 독립변수를 다른 독립변수로 선형회귀한 성능을 나타�
 - (2) 별도로 범주화하지 않은 연속형으로 남아있는 Wt, Ht 피처들을 포함하여 그리고 포함하지 않고 Standard Scaling을 적용하여 합쳤다.
 - (3) 이후, 오버샘플링으로 범주형+연속형 데이터에 적합한 SMOTE-NC와 RandomOversampling를 적용하였다.
 
-테스트 결과 중, ROS을 적용했을 때의 모델의 예측 성능이 가장 좋았으며, (2) 연속형인 Wt, Ht를 제외하고, 범주화 한 피처들만을 사용했을 때가 결과적으로 더 나은, 아래와 같은 예측 성능을 가져왔다.
+테스트 결과 중, Random Oversampling를 적용했을 때의 모델의 예측 성능이 가장 좋았으며, (2) 연속형인 Wt, Ht를 제외하고, 범주화 한 피처들만을 사용했을 때가 결과적으로 더 나은, 아래와 같은 예측 성능을 가져왔다.
 
-<p align="center"><img src="https://user-images.githubusercontent.com/38115693/147502365-93d6dfdc-13af-4d72-bcc2-f4812c19e3ea.png" width="40%" height=""></p>
+<p align="center"><img src="https://user-images.githubusercontent.com/38115693/155497060-eb91f705-b2e1-49db-92aa-9c62ade394e0.png" width="40%" height=""></p>
 
 One-Hot Encoding과 ROS를 적용한 테스트 결과는 평균적으로 이와 같은 예측 성능을 얻었다.
 - Random Forest: accuracy 82%, recall 75%
