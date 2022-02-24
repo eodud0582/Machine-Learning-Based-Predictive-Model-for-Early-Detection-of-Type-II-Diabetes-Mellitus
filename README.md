@@ -162,7 +162,7 @@
 
 ### 세부 모델링 과정
 
-#### 1. 데이터 전처리
+**1. 데이터 전처리**
 
 ![image](https://user-images.githubusercontent.com/38115693/147497046-b62286eb-5ead-44c8-9515-808e3f3152ab.png)
 
@@ -170,7 +170,7 @@
   - 기존의 각 검사수치 변수(연속형)들을 그룹핑하고 범주화한 범주형 변수들로에 대해 **(1) Label Encoding**과 **(2) One-Hot Encoding**을 각각 적용하여 모델링
   - 마지막으로, 기존의 연속형 변수들만을 사용하여 **(3) Standard Scaling** 적용 후 모델링
 
-#### 2. 오버샘플링
+**2. 오버샘플링**
 
 ![image](https://user-images.githubusercontent.com/38115693/147497557-b2dab919-761d-4e4f-bd84-620556ee9de4.png)
 
@@ -181,7 +181,7 @@
   4. `SMOTE-NC`: SMOTE가 수치형/연속형 데이터로만 이루어진 데이터에 적합한 반면, SMOTE-NC는 범주형과 수치형이 믹스된 데이터에 적용할 수 있는 기법
   5. `SMOTE-N`: SMOTE-N은 범주형으로만 이루어진 데이터에 적합한 SMOTE 기법
 
-#### 3. 하이퍼파라미터 튜닝
+**3. 하이퍼파라미터 튜닝**
 
 ![image](https://user-images.githubusercontent.com/38115693/147499588-35f33d6b-5fb9-4902-93bf-a9c3bdb873e1.png)
 
@@ -215,6 +215,8 @@
 ---
 ### I. 범주형 데이터 기준 모델링
 
+### Model 1
+
 **모델링 내용**
 1. One-Hot Encoding 적용
 2. 범주형+연속형 데이터에 적합한 SMOTE-NC와 RandomOversampling로 오버샘플링
@@ -223,10 +225,19 @@
 
 <p align="center"><img src="https://user-images.githubusercontent.com/38115693/147502365-93d6dfdc-13af-4d72-bcc2-f4812c19e3ea.png" width="40%" height=""></p>
 
+- 이 실험에선 Random Oversampling을 적용했을 때의 모델 예측 성능이 가장 좋았는데, 연속형 피처인 Wt, Ht는 제외하고, 범주화 된 피처들만을 사용했을 때에 결과적으로 가장 괜찮은 성능을 보였다.
+
+```
+- Random Oversampling 적용 모델의 평균 예측 성능
+  - Random Forest: accuracy 82%, recall 75%
+  - Logistic Regression: accuracy 79%, recall 74%
+  - SVM: accuracy 77%, recall 74%
+```
+
 ---
 ### II. 기존 연속형 데이터 기준 모델링
 
-### 1. Trial 1
+### Model 2
 
 **모델링 내용**
 1. gender, age 피처에 대해 One-Hot Encoding을 적용
@@ -237,10 +248,20 @@
 
 <p align="center"><img src="https://user-images.githubusercontent.com/38115693/147503805-fc4534c4-4bc3-454a-b1fb-79cc92202e5b.png" width="75%" height=""></p>
 
-- Standard Scaling을 적용한 두 모델 모두 성능은 비슷하게 나타났다.
-- **Standard Scaling을 적용한 두 결과 모두 범주화한 데이터셋을 사용하여 모델링한 결과보다 성능이 더 좋게 나타났다.**
+- 이 실험에서 Standard Scaling을 적용한 두 모델 모두 성능은 비슷하게 나타났다.
+- **Standard Scaling을 적용한 두 결과 모두 범주화한 데이터셋을 사용하여 모델링한 결과보다 더 나은 성능을 보여줬다.**
 
-### 2. Trial 2
+```
+- SMOTE-NC 적용 모델의 평균 예측 성능
+  - Logistic Regression: accuracy 83%, recall 79%
+  - SVM: accuracy 81%, recall 79%
+
+- Random Oversampling 적용 모델의 평균 예측 성능
+  - Logistic Regression: accuracy 83%, recall 80%
+  - SVM: accuracy 82%, recall 81%
+```
+
+### Model 3
 
 **모델링 내용**
 - 상관관계가 높은 Wt(몸무게), Ht(키) 변수 제외
@@ -253,7 +274,17 @@
 - Wt, Ht 피처들을 제외한 두 모델도 구간으로 나누어 범주화한 데이터셋을 사용하여 모델링한 결과보다는 예측 성능이 더 좋은 것으로 나타났다.
 - Wt, Ht를 포함하여 모델링 했을 때의 결과와 비교하면, accuracy 결과는 비슷하지만 recall은 Wt, Ht 피처들을 포함했을 때의 결과가 더 낫다. 따라서, **Wt, Ht 피처들을 포함하는 경우 더 좋은 모델로 학습이 가능**하다.
 
-### 3. Trial 3
+```
+- SMOTE-NC 적용 모델의 평균 예측 성능
+  - Logistic Regression: accuracy 84%, recall 77%
+  - SVM: accuracy 82%, recall 77%
+
+- Random Oversampling 적용 모델의 평균 예측 성능
+  - Logistic Regression: accuracy 83%, recall 80%
+  - SVM: accuracy 82%, recall 82%
+```
+
+### Model 4
 
 **모델링 내용**
 1. 기존 연속형 피처들을 Standard Scaling을 적용하는 것에 age 피처를 포함하여 진행 
@@ -265,6 +296,16 @@
 <p align="center"><img src="https://user-images.githubusercontent.com/38115693/147504845-ca463740-bcfd-4eb4-9f09-9d6a08092a8b.png" width="75%" height=""></p>
 
 - 모델링 결과, 마지막 모델이 가장 좋은 예측 성능을 보여줬다.
+
+```
+- SMOTE-NC 적용 모델의 평균 예측 성능
+  - Logistic Regression: accuracy 85%, recall 82%
+  - SVM: accuracy 84%, recall 82%
+
+- Random Oversampling 적용 모델의 평균 예측 성능
+  - Logistic Regression: accuracy 84%, recall 83%
+  - SVM: accuracy 83%, recall 82%
+```
 
 ---
 ### 변수 중요도 확인
