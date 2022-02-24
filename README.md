@@ -225,7 +225,7 @@
 
 <p align="center"><img src="https://user-images.githubusercontent.com/38115693/155497060-eb91f705-b2e1-49db-92aa-9c62ade394e0.png" width="40%" height=""></p>
 
-- 이 실험에선 **Random Oversampling**을 적용했을 때의 모델 예측 성능이 가장 좋았는데, **연속형 피처인 Wt, Ht는 제외하고, 범주화 된 피처들만을 사용했을 때**에 결과적으로 가장 괜찮은 성능을 보였다.
+- 이 실험에선 **Random Oversampling**을 적용했을 때 모델 예측 성능이 가장 좋았으며, **연속형 피처인 Wt, Ht는 제외하고, 범주화 된 피처들만을 사용했을 때**에 결과적으로 가장 괜찮은 성능을 보였다.
 
 ```
 - Random Oversampling 적용 모델의 평균 예측 성능
