@@ -218,8 +218,8 @@
 ### Model 1
 
 **모델링 내용**
-1. One-Hot Encoding 적용
-2. 범주형+연속형 데이터에 적합한 SMOTE-NC와 RandomOversampling로 오버샘플링
+- One-Hot Encoding 적용
+- 범주형+연속형 데이터에 적합한 SMOTE-NC와 RandomOversampling로 오버샘플링
 
 **모델링 결과**
 
@@ -240,9 +240,9 @@
 ### Model 2
 
 **모델링 내용**
-1. gender, age 피처에 대해 One-Hot Encoding을 적용
-2. 기존 연속형 변수들에 대해 Standard Scaling을 적용 (Data Leakage를 피하기 위해 train-test split 이후 적용)
-3. 범주형+연속형 데이터에 적합한 SMOTE-NC와 RandomOversampling로 오버샘플링
+- gender, age 피처에 대해 One-Hot Encoding을 적용
+- 기존 연속형 변수들에 대해 Standard Scaling을 적용 (Data Leakage를 피하기 위해 train-test split 이후 적용)
+- 범주형+연속형 데이터에 적합한 SMOTE-NC와 RandomOversampling로 오버샘플링
 
 **모델링 결과**
 
@@ -287,11 +287,11 @@
 ### Model 4
 
 **모델링 내용**
-1. 기존 연속형 피처들을 Standard Scaling을 적용하는 것에 age 피처를 포함하여 진행 
+- 기존 연속형 피처들을 Standard Scaling을 적용하는 것에 age 피처를 포함하여 진행 
   - gender 피처에 대해서만 One-Hot Encoding 적용
   - age 피처를 Standard Scaling 과정에 포함하여 다른 연속형 변수들과 함께 Standard Scaling 적용
-2. 다시 Wt, Ht 피처들을 포함하여 진행
-3. 범주형+연속형 데이터에 적합한 SMOTE-NC와 RandomOversampling로 오버샘플링
+- 다시 Wt, Ht 피처들을 포함하여 진행
+- 범주형+연속형 데이터에 적합한 SMOTE-NC와 RandomOversampling로 오버샘플링
 
 <p align="center"><img src="https://user-images.githubusercontent.com/38115693/147504845-ca463740-bcfd-4eb4-9f09-9d6a08092a8b.png" width="75%" height=""></p>
 
